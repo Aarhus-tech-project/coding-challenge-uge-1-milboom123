@@ -6,7 +6,7 @@ namespace GuessANumberGame
     {
         static void Main(string[] args)
         {
-            Random rand = new Random();
+            
             bool playAgain = true;
 
             while (playAgain)
@@ -14,29 +14,35 @@ namespace GuessANumberGame
                 int guess = 0;
                 int minNumber, maxNumber;
 
-                // Get minimum number
+                // Initial Massage
+                Console.WriteLine("Welcome to the Guess a Number Game!");
+                Console.WriteLine("In this game, you will set a range and try to guess the randomly generated number within that range.");
+
+                // Get min number
                 Console.WriteLine("Enter the minimum number:");
                 while (!int.TryParse(Console.ReadLine(), out minNumber))
                 {
                     Console.WriteLine("Please enter a valid number:");
                 }
 
-                // Get maximum number
+                // Get max number
                 Console.WriteLine("Enter the maximum number:");
                 while (!int.TryParse(Console.ReadLine(), out maxNumber) || maxNumber <= minNumber)
                 {
                     Console.WriteLine("Please enter a valid number greater than the minimum:");
                 }
 
-                // Generate the random number within user range
-                int NumberRange = rand.Next(minNumber, maxNumber + 1);
+                NumberGenerator generator = new NumberGenerator(minNumber, maxNumber);
+
+                // Generate random number within range
+                int number = generator.Generate();
 
                 Console.WriteLine($"Guess a number between {minNumber} and {maxNumber}");
 
                 int attempts = 0;
 
-                // Guessing loop
-                while (guess != NumberRange)
+                // Guess loop
+                while (guess != number)
                 {
                     if (!int.TryParse(Console.ReadLine(), out guess))
                     {
@@ -48,25 +54,25 @@ namespace GuessANumberGame
                         Console.WriteLine($"Please guess a number within the range {minNumber} to {maxNumber}");
                         continue;
                     }
-                    
+
                     attempts++;
                     {
-                        if (guess < NumberRange)
+                        if (guess < number)
                         {
                             Console.WriteLine("Too low! Try again.");
                         }
-                        else if (guess > NumberRange)
+                        else if (guess > number)
                         {
                             Console.WriteLine("Too high! Try again.");
                         }
                         else
                         {
-                            Console.WriteLine($"Congratulations! You've guessed the number {NumberRange} in {attempts} attempts.");
+                            Console.WriteLine($"Congratulations! You've guessed the number {number} in {attempts} attempts.");
                         }
                     }
                 }
 
-                // Ask to play again
+                // Play again?
                 Console.WriteLine("Do you want to play again? (y/n)");
                 string answer = Console.ReadLine()?.Trim().ToLower() ?? "";
 
